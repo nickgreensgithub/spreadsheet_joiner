@@ -11,6 +11,7 @@ def read_args():
     parser.add_argument('-f', '--result_file_name', default="joined", required=False)#remember to append the ext argument to this for output
     parser.add_argument('-n', '--na_value', default="NA", required=False)
     parser.add_argument('-s', '--column_separator', default=None, required=False)
+    parser.add_argument('-p', '--name_pattern', default=None, required=False, help="Only files with this string in the name will be included")
     args=parser.parse_args()
     return args
 
@@ -49,6 +50,9 @@ def move_merge_column_to_front(df: pd.DataFrame, merge_column: str) -> pd.DataFr
     df.insert(loc=0, column=merge_column, value=merge_column_values)
     return df
 
+def filter_files_based_on_string(comparison_string:str, files:list[str]) -> list[str]:
+    return [file for file in files if comparison_string in file]
+
 def main() -> None:
     args = read_args()
     extension = args.extension.lstrip('.')
@@ -56,6 +60,9 @@ def main() -> None:
     col_separator = args.column_separator
     result_path = args.result_file_name+"."+extension
     input_files = get_input_files(args.paths, extension)
+    if args.name_pattern is not None:
+        input_files = filter_files_based_on_string(args.name_pattern, input_files)
+
     na_value = args.na_value
 
     result = pd.DataFrame()
