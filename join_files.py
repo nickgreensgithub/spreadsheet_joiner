@@ -69,8 +69,11 @@ def main() -> None:
 
     for input_file in input_files:
         df = read_file(input_file, col_separator)
-        result = merge_dfs_on_column(result, df, merge_column)
-
+        try:
+            df.loc[:, merge_column]
+            result = merge_dfs_on_column(result, df, merge_column)
+        except KeyError:
+            print(f"{input_file} does not contain the column {merge_column}, skipping")
     
     merge_column_values = result[merge_column]
     result.drop(columns=[merge_column], inplace=True)
