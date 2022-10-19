@@ -7,9 +7,9 @@ def read_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('paths', nargs='+', default=os.getcwd())
     parser.add_argument('merge_column')
-    parser.add_argument('-e', '--extension', default="csv", required=False) 
-    parser.add_argument('-f', '--result_file_name', default="joined", required=False)#remember to append the ext argument to this for output
-    parser.add_argument('-n', '--na_value', default="NA", required=False)
+    parser.add_argument('-e', '--extension', default="csv", required=False, help="File extension to look for") 
+    parser.add_argument('-f', '--result_file_name', default="joined", required=False, help="The name of the resulting file, will have the same extension as the input files")
+    parser.add_argument('-n', '--na_value', default="NA", required=False, help="Value to use for NA values")
     parser.add_argument('-s', '--column_separator', default=None, required=False)
     parser.add_argument('-p', '--name_pattern', default=None, required=False, help="Only files with this string in the name will be included")
     args=parser.parse_args()
@@ -31,7 +31,7 @@ def get_input_files(paths: list[str], extension:str)->list[str]:
     return filtered_file_paths
 
 def remove_df_columns_where_header_starts_with_unnamed(df: pd.DataFrame) -> pd.DataFrame:
-    #filter out unnamed columns, weirdness with pandas
+    #filter out unnamed columns, pandas adds these when reading in a file
     return df.loc[:, df.columns.str.contains('^Unnamed') == False]
 
 def read_file(path: str, col_separator = None) -> pd.DataFrame:
