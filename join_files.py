@@ -75,11 +75,13 @@ def main() -> None:
         except KeyError:
             print(f"{input_file} does not contain the column {merge_column}, skipping")
     
-    merge_column_values = result[merge_column]
-    result.drop(columns=[merge_column], inplace=True)
-    result.insert(loc=0, column=merge_column, value=merge_column_values)
+    #No files passed in or found in path
+    if not result.empty:
+        merge_column_values = result[merge_column]
+        result.drop(columns=[merge_column], inplace=True)
+        result.insert(loc=0, column=merge_column, value=merge_column_values)
 
-    result.to_csv(f"{result_path}", sep='\t',na_rep=na_value,float_format="%.0f", index=False)
+        result.to_csv(f"{result_path}", sep='\t',na_rep=na_value,float_format="%.0f", index=False)
 
 if __name__ == "__main__":
     main()
