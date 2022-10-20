@@ -19,16 +19,16 @@ def get_all_files_in_directory_with_extension(path: str, ext: str) -> list:
     path = path.rstrip('/')+"/**/*."+ext
     return glob.glob(path, recursive=True)
 
-def get_input_files(paths: list[str], extension:str)->list[str]:
-    filtered_file_paths = []
+def get_input_files(paths: list[str], extension:str)->set[str]:
+    filtered_file_paths = set()
     for path in paths:
         globbed = glob.glob(path)
         for globbed_path in globbed:
             if os.path.isdir(globbed_path):
-                filtered_file_paths.extend(get_all_files_in_directory_with_extension(globbed_path, extension))
+                filtered_file_paths.update(get_all_files_in_directory_with_extension(globbed_path, extension))
             elif os.path.isfile(globbed_path):
                 if globbed_path.endswith(extension):
-                    filtered_file_paths.append(globbed_path)
+                    filtered_file_paths.add(globbed_path)
     return filtered_file_paths
 
 def remove_df_columns_where_header_starts_with_unnamed(df: pd.DataFrame) -> pd.DataFrame:
