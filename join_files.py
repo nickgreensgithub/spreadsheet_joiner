@@ -16,7 +16,8 @@ def read_args():
     return args
 
 def get_all_files_in_directory_with_extension(path: str, ext: str) -> list:
-    return glob.glob(path+"/*."+ext)
+    path = path.rstrip('/')+"/**/*."+ext
+    return glob.glob(path, recursive=True)
 
 def get_input_files(paths: list[str], extension:str)->list[str]:
     filtered_file_paths = []
